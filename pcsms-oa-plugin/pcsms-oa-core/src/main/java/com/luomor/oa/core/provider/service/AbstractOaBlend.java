@@ -1,0 +1,95 @@
+package com.luomor.oa.core.provider.service;
+
+import cn.hutool.core.util.StrUtil;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import com.luomor.oa.api.OaCallBack;
+import com.luomor.oa.api.OaSender;
+import com.luomor.oa.comm.config.OaSupplierConfig;
+import com.luomor.oa.comm.entity.Request;
+import com.luomor.oa.comm.entity.Response;
+import com.luomor.oa.comm.enums.MessageType;
+import com.luomor.oa.core.provider.factory.OaBeanFactory;
+
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.concurrent.PriorityBlockingQueue;
+
+/**
+ * @author Peter
+ * 2023-10-22 21:03
+ */
+@Slf4j
+public abstract class AbstractOaBlend<C extends OaSupplierConfig> implements OaSender {
+
+    @Getter
+    private final String configId;
+
+    private final C config;
+
+    protected final Executor pool;
+
+    protected final PriorityBlockingQueue<Request> priorityQueueMap;
+
+    protected AbstractOaBlend(C config, Executor pool) {
+        this.configId = StrUtil.isEmpty(config.getConfigId()) ? getSupplier() : config.getConfigId();
+        this.config = config;
+        this.pool = pool;
+        this.priorityQueueMap = OaBeanFactory.initPriorityBlockingQueue();
+        priorityQueueMapThreadInit();
+    }
+
+    protected AbstractOaBlend(C config) {
+        this.configId = StrUtil.isEmpty(config.getConfigId()) ? getSupplier() : config.getConfigId();
+        this.config = config;
+        this.pool = OaBeanFactory.getExecutor();
+        this.priorityQueueMap = OaBeanFactory.initPriorityBlockingQueue();
+        priorityQueueMapThreadInit();
+    }
+
+    protected C getConfig() {
+        return config;
+    }
+
+    protected void priorityQueueMapThreadInit() {
+        Boolean status = OaBeanFactory.getPriorityExecutorThreadStatus();
+        if(Boolean.FALSE.equals(status)){
+            OaBeanFactory.setPriorityExecutorThreadStatus(true);
+            pool.execute(() -> {
+                Thread.currentThread().setName("oa-priorityQueueMap-thread");
+                while (!Thread.currentThread().isInterrupted()) {
+                    try{
+                        Request request = priorityQueueMap.take() ;
+                        pool.execute(() -> {
+                            log.info("优先级为"+request.getPriority()+"已发送");
+                            sender(request, request.getMessageType());
+                        });
+                    }catch (InterruptedException e){
+                        log.info("[Dispatcher]-priorityQueueMap-task-dispatcher has been interrupt to close.");
+                        Thread.currentThread().interrupt();
+                        break;
+                    }
+                }
+            });
+        }
+    }
+
+
+    @Override
+    public final void senderAsync(Request request, MessageType messageType) {
+        pool.execute(() -> sender(request, messageType));
+    }
+
+    @Override
+    public final void senderAsync(Request request, MessageType messageType, OaCallBack callBack) {
+        CompletableFuture<Response> future = CompletableFuture.supplyAsync(() -> sender(request, messageType));
+        future.thenAcceptAsync(callBack::callBack);
+    }
+
+    @Override
+    public final void senderAsyncByPriority(Request request, MessageType messageType) {
+        request.setMessageType(messageType);
+        priorityQueueMap.offer(request);
+    }
+}

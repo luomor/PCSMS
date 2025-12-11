@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.luomor.pcsms</groupId>
+        <artifactId>pcsms</artifactId>
+        <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <packaging>pom</packaging>
+    <artifactId>pcsms-email-jakarta</artifactId>
+
+    <modules>
+        <module>pcsms-email-jakarta-api</module>
+        <module>pcsms-email-jakarta-comm</module>
+        <module>pcsms-email-jakarta-core</module>
+    </modules>
+
+    <name>pcsms-email-jakarta</name>
+    <description>JDK 11 或更高版本中使用</description>
+
+    <properties>
+        <jakarta-mail.version>2.1.2</jakarta-mail.version>
+        <jakarta-eclipse.version>2.0.2</jakarta-eclipse.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <dependency>
+                <groupId>com.luomor.pcsms</groupId>
+                <artifactId>pcsms-email-jakarta-api</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.luomor.pcsms</groupId>
+                <artifactId>pcsms-email-jakarta-comm</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.luomor.pcsms</groupId>
+                <artifactId>pcsms-email-jakarta-core</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.angus</groupId>
+                <artifactId>jakarta.mail</artifactId>
+                <version>${jakarta-eclipse.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>jakarta.mail</groupId>
+                <artifactId>jakarta.mail-api</artifactId>
+                <version>${jakarta-mail.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>jakarta.activation</groupId>
+                <artifactId>jakarta.activation-api</artifactId>
+                <version>${jakarta-mail.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+</project>

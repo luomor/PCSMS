@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.luomor.oa.core.config.OaMainConfig,\
+  com.luomor.oa.core.config.OaSupplierConfig

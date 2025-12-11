@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.luomor.pcsms</groupId>
+        <artifactId>pcsms</artifactId>
+        <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>pcsms-javase-plugin</artifactId>
+    <packaging>jar</packaging>
+
+    <name>pcsms-javase-plugin</name>
+    <description>pcsms-javase-plugin</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.luomor.pcsms</groupId>
+            <artifactId>pcsms-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>${snakeyaml.version}</version>
+        </dependency>
+    </dependencies>
+
+</project>

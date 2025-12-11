@@ -1,0 +1,50 @@
+package com.luomor.pcsms.api.dao;
+
+/**
+ * DAO 接口
+ *
+ * @author Peter
+ * @author Peter
+ * @since 2025/8/5 20:03
+ */
+public interface SmsDao {
+
+    /**
+     * 存储
+     *
+     * @param key       键
+     * @param value     值
+     * @param cacheTime 缓存时间（单位：秒)
+     */
+    void set(String key, Object value, long cacheTime);
+
+    /**
+     * 存储
+     *
+     * @param key   键
+     * @param value 值
+     */
+    void set(String key, Object value);
+
+    /**
+     * 读取
+     *
+     * @param key 键
+     * @return 值
+     */
+    Object get(String key);
+
+    /**
+     *  remove
+     * <p> 根据key移除缓存
+     * @param key 缓存键
+     * @return 被删除的value
+     * @author Peter
+    */
+    Object remove(String key);
+
+    /**
+     * 清空
+     */
+    void clean();
+}
